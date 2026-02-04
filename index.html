@@ -14,17 +14,17 @@
     <style>
         :root {
             --primary-color: #333333;
-            --text-body: #444444;
-            --accent-pink: #ff8cb6;
-            --accent-blue: #70e8e0;
-            --accent-gold: #f0d550;
+            --text-body: #555555;
+            --accent-pink: #fce4ec; /* さらに淡いピンク */
+            --accent-pink-dark: #f8bbd0;
             --bg-color: #ffffff;
-            --glass-bg: rgba(255, 255, 255, 0.9);
-            --glass-border: rgba(255, 255, 255, 1.0);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.9);
         }
 
         * {
             scroll-behavior: smooth;
+            box-sizing: border-box;
         }
 
         body {
@@ -46,141 +46,83 @@
         /* Loading Screen */
         #loading-screen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: 9999;
             background: #fff;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-                        visibility 1.2s;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
         }
 
         #loading-screen.hidden {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transform: scale(1.1);
         }
 
         .loading-logo {
             font-family: 'Playfair Display', serif;
             font-style: italic;
-            font-size: 3.5rem;
-            color: var(--accent-pink);
-            margin-bottom: 1.5rem;
-            text-shadow: 0px 0px 15px rgba(255, 140, 182, 0.3);
+            font-size: 2.5rem;
+            color: #ffc1d1;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
         }
 
         .loading-bar-container {
-            width: 200px;
-            height: 4px;
-            background: #f5f5f5;
+            width: 150px; height: 2px;
+            background: #fdf2f5;
             border-radius: 10px;
             overflow: hidden;
         }
         
         .loading-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-pink));
-            transition: width 0.1s linear;
-        }
-        
-        .loading-text {
-            margin-top: 1rem;
-            font-family: 'Italiana', serif;
-            font-size: 0.9rem;
-            letter-spacing: 0.2em;
-            color: #888;
+            height: 100%; width: 0%;
+            background: #ffc1d1;
         }
 
-        /* Background Canvas */
-        #canvas-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            opacity: 1.0; 
-        }
-
-        /* Custom Message Box (Alert replacement) */
+        /* Custom Alert Notification */
         #custom-alert {
             position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            padding: 1rem 2.5rem;
+            top: 30px; left: 50%;
+            transform: translateX(-50%) translateY(-150%);
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(15px);
+            padding: 10px 25px;
             border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             z-index: 10000;
-            border: 1px solid var(--accent-pink);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-weight: 600;
+            border: 1px solid #fce4ec;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 500;
             color: var(--primary-color);
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
         }
         #custom-alert.show {
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Main Content Layout */
-        .page-container {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            opacity: 0;
-            transition: opacity 1.5s ease;
-        }
-        
-        .page-container.visible {
-            opacity: 1;
+        /* Canvas Background */
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            background-color: #fff;
         }
 
-        section {
-            min-height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 6rem 2rem;
-            box-sizing: border-box;
-        }
-
-        h1, h2, h3 { margin: 0; }
-
-        .section-title {
-            font-family: 'Italiana', serif;
-            font-size: clamp(2.8rem, 5vw, 4.5rem);
-            margin-bottom: 4rem;
-            background: linear-gradient(45deg, var(--accent-pink), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
-            display: inline-block;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
-        }
-        
         /* Navigation */
         nav {
             position: fixed;
-            top: 0;
-            right: 0;
-            padding: 2rem 4rem;
+            top: 0; right: 0;
+            padding: 2.5rem 4rem;
             z-index: 100;
             display: flex;
-            gap: 2.5rem;
+            gap: 3rem;
             opacity: 0;
-            transition: opacity 1s ease 1s;
+            transition: opacity 1.2s ease 0.5s;
         }
         .loaded nav { opacity: 1; }
 
@@ -188,536 +130,246 @@
             text-decoration: none;
             color: var(--primary-color);
             font-family: 'Italiana', serif;
-            font-size: 1.1rem;
-            position: relative;
-            letter-spacing: 0.1em;
-            transition: color 0.3s;
+            font-size: 0.95rem;
+            letter-spacing: 0.2em;
+            transition: color 0.4s;
             font-weight: 600;
+            position: relative;
         }
-        .nav-item:hover { color: var(--accent-pink); }
+        .nav-item:hover { color: #ffc1d1; }
         .nav-item::after {
             content: '';
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0%;
-            height: 1px;
-            background: var(--accent-pink);
-            transition: width 0.3s;
+            bottom: -5px; left: 50%; width: 0; height: 1px;
+            background: #ffc1d1;
+            transition: all 0.4s ease;
+            transform: translateX(-50%);
         }
         .nav-item:hover::after { width: 100%; }
 
-        /* Hero Section */
-        .hero-section {
-            height: 100vh;
-            text-align: center;
+        /* General Layout */
+        .page-container {
             position: relative;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+        .page-container.visible { opacity: 1; }
+
+        section {
+            min-height: 100vh;
+            padding: 10rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .hero-content {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 1.8s cubic-bezier(0.2, 1, 0.3, 1) 0.5s;
+        .section-title {
+            font-family: 'Italiana', serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            margin-bottom: 5rem;
+            background: linear-gradient(to right, #ffc1d1, #f8bbd0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            letter-spacing: 0.1em;
         }
-        .loaded .hero-content {
+
+        /* Hero */
+        .hero-section { height: 100vh; text-align: center; }
+        .hero-title {
+            font-family: 'Italiana', serif;
+            font-size: clamp(3rem, 10vw, 7.5rem);
+            line-height: 1;
+            margin-bottom: 2rem;
+            opacity: 0;
+            font-weight: 400;
+            transform: translateY(20px);
+            transition: all 2s cubic-bezier(0.2, 1, 0.3, 1) 0.6s;
+        }
+        .loaded .hero-title { opacity: 1; transform: translateY(0); }
+        .hero-desc {
+            font-size: 0.85rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: #888;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        /* Glass Cards & Animations */
+        .scroll-anim {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1.2s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        .scroll-anim.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .hero-logo {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: clamp(1.4rem, 2.5vw, 2rem);
-            color: var(--accent-pink);
-            letter-spacing: 0.1em;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .hero-title {
-            font-family: 'Italiana', serif;
-            font-size: clamp(4rem, 10vw, 8.5rem);
-            font-weight: 400;
-            line-height: 0.95;
-            color: var(--primary-color);
-            margin-bottom: 2rem;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-desc {
-            font-size: 1rem;
-            letter-spacing: 0.15em;
-            color: #666;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .scroll-hint {
-            position: absolute;
-            bottom: 3rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Italiana', serif;
-            font-size: 0.8rem;
-            letter-spacing: 0.3em;
-            color: var(--accent-pink);
-            font-weight: bold;
-            animation: bounce 2s infinite;
-            opacity: 0;
-            transition: opacity 1s ease 1.5s;
-        }
-        .loaded .scroll-hint { opacity: 1; }
-
-        /* About Section */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid #fff;
-            border-radius: 24px;
-            padding: 5rem 4rem;
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 40px;
+            padding: 5rem;
             width: 100%;
             max-width: 1000px;
-            box-shadow: 0 20px 60px rgba(255, 140, 182, 0.08); 
             display: flex;
-            flex-direction: row;
             gap: 5rem;
             align-items: center;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 1.2s cubic-bezier(0.2, 1, 0.3, 1);
+            box-shadow: 0 15px 45px rgba(255, 193, 209, 0.05);
         }
 
         @media (max-width: 850px) {
-            .glass-card {
-                flex-direction: column;
-                padding: 3rem 2rem;
-                gap: 2.5rem;
-            }
-            nav { padding: 1.5rem 2rem; gap: 1.5rem; }
-        }
-
-        .glass-card.visible {
-            opacity: 1;
-            transform: translateY(0);
+            .glass-card { flex-direction: column; padding: 3rem 2rem; text-align: center; gap: 3rem; }
+            nav { padding: 1.5rem; gap: 1.5rem; justify-content: center; width: 100%; }
         }
 
         .profile-img-wrapper {
             flex: 1;
+            border-radius: 25px;
             overflow: hidden;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
-            max-width: 380px;
-            width: 100%;
-            position: relative;
-            aspect-ratio: 1/1;
-            background: #fff;
+            aspect-ratio: 1;
+            background: #fafafa;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.03);
         }
-        
-        .profile-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 1s ease;
-        }
-        .profile-img-wrapper:hover .profile-img {
-            transform: scale(1.05);
-        }
+        .profile-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.95; }
 
-        .profile-text {
-            flex: 1.3;
-            text-align: left;
-        }
+        .profile-text { flex: 1.2; }
+        .profile-name { font-family: 'Italiana', serif; font-size: 2.8rem; margin-bottom: 0.8rem; font-weight: 400; }
+        .profile-role { color: #f48fb1; font-style: italic; font-family: 'Playfair Display', serif; display: block; margin-bottom: 1.8rem; letter-spacing: 0.05em; font-size: 1.1rem; }
+        .profile-desc { color: #666; font-size: 1.05rem; }
 
-        .profile-name {
-            font-family: 'Italiana', serif;
-            font-size: 3.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-        .profile-role {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.2rem;
-            color: var(--accent-pink);
-            letter-spacing: 0.05em;
-            margin-bottom: 2rem;
-            display: block;
-            font-weight: 600;
-        }
-        .profile-desc {
-            line-height: 2.2;
-            color: var(--text-body);
-            margin-bottom: 2.5rem;
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        /* Works Section */
-        .slider-section {
-            padding: 8rem 0;
-            min-height: 100vh;
-            overflow: hidden;
-            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255, 245, 250, 0.4) 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .slider-container {
-            width: 100%;
-            max-width: 1200px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .slider-header-wrapper {
-            text-align: center;
-            margin-bottom: 2rem;
-            position: relative;
-            z-index: 20;
-        }
-
-        .slider-wrapper {
-            display: flex;
-            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-            width: 100%;
-            padding: 2rem 0;
-        }
-
-        .slide {
-            min-width: 100%;
-            padding: 0 1.5rem;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0.3;
-            transition: opacity 0.8s ease, transform 0.8s ease;
-            transform: scale(0.9);
-        }
-        
-        .slide.active {
-            opacity: 1;
-            transform: scale(1);
-        }
+        /* Slider */
+        .slider-section { padding: 6rem 0; background: transparent; }
+        .slider-container { width: 100%; max-width: 1100px; position: relative; overflow: hidden; }
+        .slider-wrapper { display: flex; transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1); }
+        .slide { min-width: 100%; padding: 0 1.5rem; opacity: 0.2; transform: scale(0.95); transition: 0.9s; }
+        .slide.active { opacity: 1; transform: scale(1); }
 
         .work-card {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(15px);
             padding: 3.5rem;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(255, 140, 182, 0.08);
+            border-radius: 35px;
             display: flex;
-            flex-direction: row;
             gap: 4rem;
-            width: 100%;
-            max-width: 1000px;
             align-items: center;
-            border: 1px solid #fff;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.02);
+            border: 1px solid rgba(255,255,255,0.6);
         }
+        @media (max-width: 768px) { .work-card { flex-direction: column; padding: 2.5rem; gap: 2.5rem; } }
 
-        @media (max-width: 800px) {
-            .work-card {
-                flex-direction: column;
-                padding: 2.5rem;
-                gap: 2rem;
-            }
-        }
+        .work-img-area { flex: 1; border-radius: 20px; overflow: hidden; aspect-ratio: 4/3; opacity: 0.9; }
+        .work-info { flex: 1.2; text-align: left; }
+        .work-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 1.2rem; font-weight: 400; }
+        .work-info p { color: #777; font-size: 1rem; }
 
-        .work-img-area {
-            flex: 1.2;
-            overflow: hidden;
-            border-radius: 16px;
-            position: relative;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
-            background-color: #ffeef5;
-            aspect-ratio: 4/3;
-            width: 100%;
-        }
-        .work-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 1s ease;
-            display: block;
-        }
-        .work-card:hover .work-img {
-            transform: scale(1.08);
-        }
-
-        .work-info {
-            flex: 1.2;
-            text-align: left;
-        }
-
-        .work-cat {
-            font-family: 'Italiana', serif;
-            font-size: 1rem;
-            color: var(--accent-blue);
-            letter-spacing: 0.1em;
-            margin-bottom: 0.8rem;
-            display: block;
-            font-weight: 700;
-        }
-        .work-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-            color: var(--primary-color);
-        }
-        .work-desc {
-            font-size: 1.05rem;
-            line-height: 2;
-            color: var(--text-body);
-            margin-bottom: 2.5rem;
-            font-weight: 500;
-        }
-
-        .slider-controls {
-            display: flex;
-            justify-content: center;
-            gap: 2.5rem;
-            margin-top: 3rem;
-            z-index: 20;
-        }
+        .slider-controls { display: flex; gap: 2.5rem; margin-top: 4rem; }
         .nav-btn {
-            width: 55px;
-            height: 55px;
-            border: 1px solid #eee;
-            background: #fff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            color: var(--accent-pink);
+            width: 55px; height: 55px; border-radius: 50%; border: 1px solid #f1f1f1;
+            background: #fff; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.4s ease; color: #f48fb1;
         }
-        .nav-btn:hover {
-            transform: scale(1.1);
-            background: var(--accent-pink);
-            color: #fff;
-            box-shadow: 0 10px 25px rgba(255, 140, 182, 0.3);
-            border-color: var(--accent-pink);
-        }
+        .nav-btn:hover { background: #fff; border-color: #f48fb1; transform: scale(1.05); }
 
-        /* Contact Section */
-        .contact-form-wrapper {
-            position: relative;
-            z-index: 50;
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(30px);
-            padding: 4rem 5rem;
-            border-radius: 24px;
+        /* Contact */
+        .contact-form {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 5rem;
+            border-radius: 40px;
             width: 100%;
             max-width: 650px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s ease;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.05);
-            text-align: center;
-            border: 1px solid #fff;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.02);
+            border: 1px solid rgba(255,255,255,0.6);
         }
-        @media (max-width: 600px) {
-            .contact-form-wrapper { padding: 3rem 1.5rem; }
+        @media (max-width: 600px) { .contact-form { padding: 3rem 2rem; } }
+        .form-group { margin-bottom: 2rem; text-align: left; }
+        .form-label { font-family: 'Italiana', serif; color: #f48fb1; display: block; margin-bottom: 0.8rem; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.1em; }
+        .form-input {
+            width: 100%; padding: 1.2rem; border: 1px solid #f0f0f0; border-radius: 15px;
+            font-family: inherit; transition: all 0.3s; background: rgba(255,255,255,0.8); font-size: 0.95rem;
         }
-        .contact-form-wrapper.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .form-input:focus { outline: none; border-color: #fce4ec; box-shadow: 0 0 0 5px rgba(252, 228, 236, 0.4); }
 
-        .contact-intro {
-            margin-bottom: 3rem;
-            line-height: 2;
-            color: var(--text-body);
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .form-row {
-            margin-bottom: 2rem;
-            text-align: left;
-        }
-        .form-label {
-            display: block;
-            font-family: 'Italiana', serif;
-            font-size: 1rem;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.8rem;
-            color: var(--accent-pink);
-            font-weight: 800;
-        }
-        .form-control {
-            width: 100%;
-            padding: 1.2rem;
-            border: 1px solid #eee;
-            border-radius: 12px;
-            background: #fff;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: all 0.3s;
-            box-sizing: border-box;
-            color: #333;
-        }
-        .form-control:focus {
-            outline: none;
-            border-color: var(--accent-pink);
-            box-shadow: 0 0 0 4px rgba(255, 140, 182, 0.1);
-        }
-        
         .submit-btn {
-            margin-top: 1rem;
-            display: inline-block;
-            padding: 1.2rem 4rem;
-            background: linear-gradient(45deg, var(--accent-pink), #ffbedb);
-            color: #fff;
-            border: none;
-            font-family: 'Italiana', serif;
-            font-size: 1.2rem;
-            letter-spacing: 0.15em;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border-radius: 50px;
-            box-shadow: 0 10px 20px rgba(255, 140, 182, 0.2);
-            font-weight: bold;
+            width: 100%; padding: 1.4rem; border: none; border-radius: 60px;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            color: #880e4f; font-family: 'Italiana', serif; font-size: 1.1rem;
+            cursor: pointer; transition: all 0.5s; font-weight: 600; margin-top: 1rem; letter-spacing: 0.1em;
         }
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(255, 140, 182, 0.4);
-        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(248, 187, 208, 0.3); opacity: 0.9; }
 
-        footer {
-            padding: 4rem 2rem;
-            font-size: 0.85rem;
-            color: #aaa;
-            text-align: center;
-            font-family: 'Italiana', serif;
-            letter-spacing: 0.2em;
-            font-weight: bold;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translate(-50%, 0); }
-            50% { transform: translate(-50%, 15px); }
-        }
-
+        footer { padding: 5rem; text-align: center; font-family: 'Italiana', serif; color: #bbb; letter-spacing: 0.3em; font-size: 0.75rem; }
     </style>
 </head>
 <body>
 
-    <div id="custom-alert">Message Sent!</div>
+    <div id="custom-alert">メッセージを送信しました ✨</div>
 
     <div id="loading-screen">
         <div class="loading-logo">Sayucchi</div>
-        <div class="loading-bar-container">
-            <div class="loading-bar" id="loading-bar"></div>
-        </div>
-        <p class="loading-text">CREATING MAGIC...</p>
+        <div class="loading-bar-container"><div class="loading-bar" id="loading-bar"></div></div>
     </div>
 
     <div id="canvas-container"></div>
 
     <div class="page-container">
-
         <nav>
-            <a href="#about" class="nav-item">About</a>
-            <a href="#works" class="nav-item">Favorites</a>
-            <a href="#contact" class="nav-item">Contact</a>
+            <a href="#about" class="nav-item">ABOUT</a>
+            <a href="#works" class="nav-item">FAVORITES</a>
+            <a href="#contact" class="nav-item">CONTACT</a>
         </nav>
 
         <section class="hero-section">
-            <div class="hero-content">
-                <span class="hero-logo">My Profile</span>
-                <h1 class="hero-title">Sayucchi<br>Official</h1>
-                <p class="hero-desc">
-                    Spreading AI Magic, One Smile at a Time
-                </p>
-            </div>
-            <div class="scroll-hint">SCROLL</div>
+            <h1 class="hero-title">Sayucchi<br>Official</h1>
+            <p class="hero-desc">Fine Art of AI & Creative Magic</p>
         </section>
 
         <section id="about">
             <h2 class="section-title">About Me</h2>
             <div class="glass-card scroll-anim">
                 <div class="profile-img-wrapper">
-                    <!-- Placeholder using a soft colored gradient as an SVG -->
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=600" alt="Profile" class="profile-img">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" alt="Profile" class="profile-img">
                 </div>
                 <div class="profile-text">
                     <h3 class="profile-name">Sayucchi</h3>
-                    <span class="profile-role">Spreading AI Magic, One Smile at a Time</span>
+                    <span class="profile-role">AI Expression Artist</span>
                     <p class="profile-desc">
-                        私の好きなものや、日々の「推し」を紹介するサイトです。<br>
-                        AIの力を通して、誰かの日常に少しだけ「魔法」をかけられたら嬉しいです。<br>
-                        ゆっくりしていってくださいね！
+                        AIの力を通して、日々の何気ない瞬間に少しだけ「魔法」を添える活動をしています。<br>
+                        新しい技術と感性を掛け合わせ、心に届く上品で繊細な表現を探求しています。
                     </p>
                 </div>
             </div>
         </section>
 
         <section id="works" class="slider-section">
-            <div class="slider-container">
-                <div class="slider-header-wrapper">
-                    <h2 class="section-title" style="margin-bottom: 0;">My Favorites</h2>
-                </div>
-
+            <h2 class="section-title">My Favorites</h2>
+            <div class="slider-container scroll-anim">
                 <div class="slider-wrapper" id="sliderWrapper">
-                    
                     <div class="slide active">
                         <div class="work-card">
-                            <div class="work-img-area">
-                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800" alt="Favorite 1" class="work-img">
-                            </div>
+                            <div class="work-img-area"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800" class="profile-img"></div>
                             <div class="work-info">
-                                <span class="work-cat">Favorite 01</span>
                                 <h3 class="work-title">Mirary</h3>
-                                <p class="work-desc">
-                                    さゆっちと一緒にAIの魔法をみんなに届けているよ⭐
-                                </p>
+                                <p>さゆっちと共にAIの未来を歩む大切なパートナー。</p>
                             </div>
                         </div>
                     </div>
-
                     <div class="slide">
                         <div class="work-card">
-                            <div class="work-img-area">
-                                <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=800" alt="Favorite 2" class="work-img">
-                            </div>
+                            <div class="work-img-area"><img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&q=80&w=800" class="profile-img"></div>
                             <div class="work-info">
-                                <span class="work-cat">Favorite 02</span>
-                                <h3 class="work-title">Create AI</h3>
-                                <p class="work-desc">
-                                    AIの魔法を届けること、新しい表現を形にすることが大好きです。
-                                </p>
+                                <h3 class="work-title">Creative AI</h3>
+                                <p>まだ見ぬ色彩と形を紡ぎ出す、デジタルのキャンバス。</p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="slide">
-                        <div class="work-card">
-                            <div class="work-img-area">
-                                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=800" alt="Favorite 3" class="work-img">
-                            </div>
-                            <div class="work-info">
-                                <span class="work-cat">Favorite 03</span>
-                                <h3 class="work-title">Possibility</h3>
-                                <p class="work-desc">
-                                    何歳からでも大丈夫、一歩踏み出す勇気が未来を変える。
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-
                 <div class="slider-controls">
                     <div class="nav-btn" id="prevBtn">←</div>
                     <div class="nav-btn" id="nextBtn">→</div>
@@ -727,291 +379,270 @@
 
         <section id="contact">
             <h2 class="section-title">Contact</h2>
-            <div class="contact-form-wrapper scroll-anim">
-                <p class="contact-intro">
-                    感想やメッセージをお待ちしています！<br>
-                    お気軽にどうぞ。
-                </p>
-                <form id="myContactForm">
-                    <div class="form-row">
+            <div class="contact-form scroll-anim">
+                <form id="contactForm">
+                    <div class="form-group">
                         <label class="form-label">Name</label>
-                        <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                        <input type="text" class="form-input" placeholder="お名前" required>
                     </div>
-                    <div class="form-row">
+                    <div class="form-group">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                        <input type="email" class="form-input" placeholder="メールアドレス" required>
                     </div>
-                    <div class="form-row">
+                    <div class="form-group">
                         <label class="form-label">Message</label>
-                        <textarea name="message" class="form-control" rows="4" placeholder="How can I help you?" style="resize: vertical;" required></textarea>
+                        <textarea class="form-input" rows="4" placeholder="メッセージを入力してください" required></textarea>
                     </div>
                     <button type="submit" class="submit-btn">Send Message</button>
                 </form>
             </div>
-            <footer>
-                &copy; 2026 Sayucchi. All Rights Reserved.
-            </footer>
+            <footer>&copy; 2026 Sayucchi. All Rights Reserved.</footer>
         </section>
-
     </div>
 
     <script>
-        // --- Custom Alert Logic ---
-        function showMsg(text) {
-            const alertBox = document.getElementById('custom-alert');
-            alertBox.innerText = text;
-            alertBox.classList.add('show');
-            setTimeout(() => alertBox.classList.remove('show'), 3000);
+        // --- UI Logic ---
+        function notify(text) {
+            const el = document.getElementById('custom-alert');
+            el.innerText = text;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3000);
         }
 
-        // --- Loading Logic ---
         window.addEventListener('load', () => {
-            const loadingScreen = document.getElementById('loading-screen');
-            const loadingBar = document.getElementById('loading-bar');
-            const pageContainer = document.querySelector('.page-container');
-            const body = document.body;
-            
-            let progress = 0;
-            const timer = setInterval(() => {
-                progress += Math.random() * 8; 
-                if(progress >= 100) {
-                    progress = 100;
-                    clearInterval(timer);
-                    loadingBar.style.width = "100%";
-                    
+            const bar = document.getElementById('loading-bar');
+            let p = 0;
+            const iv = setInterval(() => {
+                p += Math.random() * 25;
+                if(p >= 100) {
+                    clearInterval(iv);
+                    bar.style.width = '100%';
                     setTimeout(() => {
-                        loadingScreen.classList.add('hidden');
-                        pageContainer.classList.add('visible');
-                        body.classList.add('loaded');
-                        setTimeout(() => loadingScreen.style.display = 'none', 1500);
+                        document.getElementById('loading-screen').classList.add('hidden');
+                        document.querySelector('.page-container').classList.add('visible');
+                        document.body.classList.add('loaded');
                     }, 600);
-                } else {
-                    loadingBar.style.width = progress + "%";
-                }
-            }, 30);
+                } else { bar.style.width = p + '%'; }
+            }, 50);
         });
 
-        // --- Scroll Animation ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if(entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.15 });
+        const obs = new IntersectionObserver(es => {
+            es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.scroll-anim').forEach(el => obs.observe(el));
 
-        document.querySelectorAll('.scroll-anim').forEach(el => observer.observe(el));
+        const wrap = document.getElementById('sliderWrapper');
+        const next = document.getElementById('nextBtn');
+        const prev = document.getElementById('prevBtn');
+        let busy = false;
 
-        // --- Slider Logic ---
-        const sliderWrapper = document.getElementById('sliderWrapper');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        let isAnimating = false;
-
-        function updateClasses() {
-            Array.from(sliderWrapper.children).forEach((slide, index) => {
-                if (index === 0) slide.classList.add('active');
-                else slide.classList.remove('active');
+        function refreshSlides() {
+            Array.from(wrap.children).forEach((s, i) => {
+                s.classList.toggle('active', i === 0);
             });
         }
 
-        function moveNext() {
-            if(isAnimating) return;
-            isAnimating = true;
-            
-            sliderWrapper.style.transition = 'transform 0.8s cubic-bezier(0.65, 0, 0.35, 1)';
-            sliderWrapper.style.transform = 'translateX(-100%)';
-            
+        next.onclick = () => {
+            if(busy) return; busy = true;
+            wrap.style.transition = 'transform 0.9s cubic-bezier(0.65, 0, 0.35, 1)';
+            wrap.style.transform = 'translateX(-100%)';
             setTimeout(() => {
-                sliderWrapper.style.transition = 'none';
-                sliderWrapper.appendChild(sliderWrapper.firstElementChild);
-                sliderWrapper.style.transform = 'translateX(0)';
-                updateClasses();
-                isAnimating = false;
-            }, 800);
-        }
+                wrap.style.transition = 'none';
+                wrap.appendChild(wrap.firstElementChild);
+                wrap.style.transform = 'translateX(0)';
+                refreshSlides();
+                busy = false;
+            }, 900);
+        };
 
-        function movePrev() {
-            if(isAnimating) return;
-            isAnimating = true;
-            
-            sliderWrapper.style.transition = 'none';
-            sliderWrapper.prepend(sliderWrapper.lastElementChild);
-            sliderWrapper.style.transform = 'translateX(-100%)';
-            
+        prev.onclick = () => {
+            if(busy) return; busy = true;
+            wrap.style.transition = 'none';
+            wrap.prepend(wrap.lastElementChild);
+            wrap.style.transform = 'translateX(-100%)';
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
-                    sliderWrapper.style.transition = 'transform 0.8s cubic-bezier(0.65, 0, 0.35, 1)';
-                    sliderWrapper.style.transform = 'translateX(0)';
+                    wrap.style.transition = 'transform 0.9s cubic-bezier(0.65, 0, 0.35, 1)';
+                    wrap.style.transform = 'translateX(0)';
+                    setTimeout(() => { refreshSlides(); busy = false; }, 900);
                 });
             });
-            
-            setTimeout(() => {
-                updateClasses();
-                isAnimating = false;
-            }, 800);
-        }
+        };
 
-        nextBtn.addEventListener('click', moveNext);
-        prevBtn.addEventListener('click', movePrev);
-        setInterval(moveNext, 6000); // Auto Play
-
-        // --- Contact Form Logic ---
-        const contactForm = document.getElementById('myContactForm');
-        contactForm.addEventListener('submit', (e) => {
+        document.getElementById('contactForm').onsubmit = (e) => {
             e.preventDefault();
-            
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzgg8LSSvsm_pN1YZAtuc8lZe_F4yJduYeyJmSHtb6UxyNJ5pz281UDCJ9BlHiP5Vl3/exec'; 
-
-            if(!scriptURL || scriptURL === '' || scriptURL.includes('AKfycb')) { // Valid URL check
-                 // Demo Mode
-                const btn = contactForm.querySelector('button');
-                btn.innerText = 'Sending...';
-                btn.disabled = true;
-                
-                setTimeout(() => {
-                    showMsg('Demo: Message Sent! ✨');
-                    contactForm.reset();
-                    btn.innerText = 'Send Message';
-                    btn.disabled = false;
-                }, 1500);
-                return;
-            }
-
-            const formData = new FormData(contactForm);
-            const data = {};
-            formData.forEach((value, key) => data[key] = value);
-
-            const btn = contactForm.querySelector('button');
-            const originalText = btn.innerText;
+            const btn = e.target.querySelector('button');
             btn.innerText = 'Sending...';
-            btn.disabled = true;
+            setTimeout(() => {
+                notify('メッセージをお受けしました。ありがとうございます ✨');
+                e.target.reset();
+                btn.innerText = 'Send Message';
+            }, 1200);
+        };
 
-            fetch(scriptURL, {
-                method: 'POST',
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                showMsg('Message Sent Successfully!');
-                contactForm.reset();
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                showMsg('Oops! Sending failed.');
-            })
-            .finally(() => {
-                btn.innerText = originalText;
-                btn.disabled = false;
-            });
-        });
+        // --- Three.js "Elegant Pale Flow" Simulation ---
+        let mainRenderer, bufferScene, mainScene, bufferCamera, mainCamera;
+        let readBuffer, writeBuffer;
+        let paintClock = new THREE.Clock();
+        let mousePos = new THREE.Vector2(0.5, 0.5);
+        let targetMousePos = new THREE.Vector2(0.5, 0.5);
 
-        // --- Three.js Fluid Background Simulation ---
-        let renderer, scene, camera, mesh;
-        let clock = new THREE.Clock();
-
-        const vertexShader = `
+        const bufferVsh = `
             varying vec2 vUv;
             void main() {
                 vUv = uv;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                gl_Position = vec4(position, 1.0);
             }
         `;
 
-        const fragmentShader = `
-            uniform float time;
-            uniform vec2 resolution;
+        const bufferFsh = `
+            uniform sampler2D tPrev;
+            uniform vec2 res;
+            uniform vec2 mouse;
+            uniform float t;
             varying vec2 vUv;
 
-            // Simplex noise inspired aesthetic fluid
-            vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-            vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-            vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-
-            float snoise(vec2 v) {
-                const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
-                vec2 i  = floor(v + dot(v, C.yy) );
-                vec2 x0 = v -   i + dot(i, C.xx);
-                vec2 i1;
-                i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
-                vec4 x12 = x0.xyxy + C.xxzz;
-                x12.xy -= i1;
-                i = mod289(i);
-                vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 ));
-                vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-                m = m*m ;
-                m = m*m ;
-                vec3 x = 2.0 * fract(p * C.www) - 1.0;
-                vec3 h = abs(x) - 0.5;
-                vec3 ox = floor(x + 0.5);
-                vec3 a0 = x - ox;
-                m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
-                vec3 g;
-                g.x  = a0.x  * x0.x  + h.x  * x0.y;
-                g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-                return 130.0 * dot(m, g);
+            float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
+            float noise(vec2 p) {
+                vec2 i = floor(p); vec2 f = fract(p);
+                vec2 u = f*f*(3.0-2.0*f);
+                return mix(mix(hash(i + vec2(0.0,0.0)), hash(i + vec2(1.0,0.0)), u.x),
+                           mix(hash(i + vec2(0.0,1.0)), hash(i + vec2(1.0,1.0)), u.x), u.y);
             }
 
             void main() {
-                vec2 uv = vUv;
-                float n = snoise(uv * 1.5 + time * 0.1);
+                // Gentle gravity
+                vec2 flowUv = vUv + vec2(0.0, 0.0012); 
                 
-                vec3 color1 = vec3(1.0, 0.55, 0.71); // Soft Pink
-                vec3 color2 = vec3(0.44, 0.91, 0.88); // Mint Blue
-                vec3 color3 = vec3(1.0, 1.0, 1.0);    // White
+                // Fine horizontal bleed
+                flowUv.x += (noise(vUv * 15.0 + t * 0.3) - 0.5) * 0.0008;
+
+                // Return to clean white base faster for elegance
+                vec4 prev = texture2D(tPrev, flowUv);
+                vec3 background = vec3(1.0);
+                vec3 prevColor = prev.rgb + (background - prev.rgb) * 0.006;
+
+                // Mouse trail
+                float aspect = res.x / res.y;
+                vec2 p = vUv; p.x *= aspect;
+                vec2 m = mouse; m.x *= aspect;
                 
-                float mixFactor = n * 0.5 + 0.5;
-                vec3 finalColor = mix(color1, color2, mixFactor);
-                finalColor = mix(finalColor, color3, snoise(uv * 2.5 - time * 0.05) * 0.2);
+                float d = distance(p, m);
+                float draw = smoothstep(0.1, 0.0, d);
                 
-                gl_FragColor = vec4(finalColor, 1.0);
+                // Sophisticated Pale Palette
+                vec3 sakura = vec3(1.0, 0.94, 0.96);    // Extremely pale sakura
+                vec3 mistRose = vec3(1.0, 0.88, 0.9);   // Mist rose
+                vec3 ivoryPink = vec3(1.0, 0.97, 0.98); // Almost white ivory
+                
+                float n = noise(vUv * 10.0 + t * 0.5);
+                vec3 inkColor = mix(sakura, mistRose, n);
+                if(n > 0.8) inkColor = mix(inkColor, ivoryPink, (n-0.8)*5.0);
+
+                // Blend new paint lightly
+                vec3 dest = prevColor;
+                if(draw > 0.0) {
+                    // Lower intensity for lighter touch
+                    dest = mix(dest, inkColor, draw * 0.18);
+                }
+
+                gl_FragColor = vec4(dest, 1.0);
             }
         `;
 
-        function initThreeJS() {
+        const displayFsh = `
+            uniform sampler2D tDiffuse;
+            varying vec2 vUv;
+            void main() {
+                gl_FragColor = texture2D(tDiffuse, vUv);
+            }
+        `;
+
+        function initFlowingPaint() {
             const container = document.getElementById('canvas-container');
-            if (!container) return;
+            const w = window.innerWidth;
+            const h = window.innerHeight;
 
-            scene = new THREE.Scene();
-            camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-            
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
+            mainRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            mainRenderer.setPixelRatio(window.devicePixelRatio);
+            mainRenderer.setSize(w, h);
+            container.appendChild(mainRenderer.domElement);
 
-            const geometry = new THREE.PlaneGeometry(2, 2);
-            const uniforms = {
-                time: { value: 0 },
-                resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+            const options = { format: THREE.RGBAFormat, type: THREE.FloatType, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter };
+            readBuffer = new THREE.WebGLRenderTarget(w, h, options);
+            writeBuffer = new THREE.WebGLRenderTarget(w, h, options);
+
+            mainRenderer.setClearColor(0xffffff, 1);
+            mainRenderer.setRenderTarget(readBuffer);
+            mainRenderer.clear();
+            mainRenderer.setRenderTarget(writeBuffer);
+            mainRenderer.clear();
+            mainRenderer.setRenderTarget(null);
+
+            bufferScene = new THREE.Scene();
+            bufferCamera = new THREE.Camera();
+            const bufferMat = new THREE.ShaderMaterial({
+                uniforms: {
+                    tPrev: { value: readBuffer.texture },
+                    res: { value: new THREE.Vector2(w, h) },
+                    mouse: { value: mousePos },
+                    t: { value: 0 }
+                },
+                vertexShader: bufferVsh,
+                fragmentShader: bufferFsh
+            });
+            bufferScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), bufferMat));
+
+            mainScene = new THREE.Scene();
+            mainCamera = new THREE.Camera();
+            const displayMat = new THREE.ShaderMaterial({
+                uniforms: { tDiffuse: { value: writeBuffer.texture } },
+                vertexShader: bufferVsh,
+                fragmentShader: displayFsh
+            });
+            mainScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), displayMat));
+
+            const onMove = (e) => {
+                const x = e.touches ? e.touches[0].clientX : e.clientX;
+                const y = e.touches ? e.touches[0].clientY : e.clientY;
+                targetMousePos.set(x / window.innerWidth, 1.0 - (y / window.innerHeight));
             };
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('touchmove', onMove);
 
-            const material = new THREE.ShaderMaterial({
-                uniforms,
-                vertexShader,
-                fragmentShader
+            function animate() {
+                requestAnimationFrame(animate);
+                mousePos.lerp(targetMousePos, 0.1);
+
+                bufferMat.uniforms.tPrev.value = readBuffer.texture;
+                bufferMat.uniforms.mouse.value = mousePos;
+                bufferMat.uniforms.t.value = paintClock.getElapsedTime();
+                
+                mainRenderer.setRenderTarget(writeBuffer);
+                mainRenderer.render(bufferScene, bufferCamera);
+                
+                displayMat.uniforms.tDiffuse.value = writeBuffer.texture;
+                mainRenderer.setRenderTarget(null);
+                mainRenderer.render(mainScene, mainCamera);
+
+                let temp = readBuffer;
+                readBuffer = writeBuffer;
+                writeBuffer = temp;
+            }
+
+            window.addEventListener('resize', () => {
+                const nw = window.innerWidth;
+                const nh = window.innerHeight;
+                mainRenderer.setSize(nw, nh);
+                readBuffer.setSize(nw, nh);
+                writeBuffer.setSize(nw, nh);
+                bufferMat.uniforms.res.value.set(nw, nh);
             });
 
-            mesh = new THREE.Mesh(geometry, material);
-            scene.add(mesh);
-
-            window.addEventListener('resize', onWindowResize);
             animate();
         }
 
-        function onWindowResize() {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            mesh.material.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            mesh.material.uniforms.time.value = clock.getElapsedTime();
-            renderer.render(scene, camera);
-        }
-
-        // Run Three.js on load
-        document.addEventListener('DOMContentLoaded', initThreeJS);
-
+        initFlowingPaint();
     </script>
 </body>
 </html>
